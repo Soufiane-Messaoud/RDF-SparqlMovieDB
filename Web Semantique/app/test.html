@@ -1,0 +1,125 @@
+1. Obtenir les films avec leur réalisateur et leur score agrégé :
+sparql
+Copier
+Modifier
+PREFIX :      <http://localhost:3333/>
+PREFIX foaf:  <http://xmlns.com/foaf/0.1/>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?title ?director ?aggregateScore
+WHERE {
+  ?movie rdf:type rdfs:Movie ;
+         rdfs:title ?title ;
+         rdfs:director ?director ;
+         rdfs:aggregateRating ?rating .
+  ?rating :audienceScore ?aggregateScore .
+}
+ORDER BY DESC(?aggregateScore)
+LIMIT 10
+2. Lister les films par genre :
+sparql
+Copier
+Modifier
+PREFIX :      <http://localhost:3333/>
+PREFIX foaf:  <http://xmlns.com/foaf/0.1/>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?title ?genre
+WHERE {
+  ?movie rdf:type rdfs:Movie ;
+         rdfs:title ?title ;
+         rdfs:genre ?genre .
+}
+ORDER BY ?genre
+LIMIT 10
+3. Obtenir les films sortis après une certaine année :
+sparql
+Copier
+Modifier
+PREFIX :      <http://localhost:3333/>
+PREFIX foaf:  <http://xmlns.com/foaf/0.1/>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?title ?releaseDate
+WHERE {
+  ?movie rdf:type rdfs:Movie ;
+         rdfs:title ?title ;
+         rdfs:datePublished ?releaseDate .
+  FILTER (xsd:date(?releaseDate) > "2010-01-01"^^xsd:date)
+}
+ORDER BY ?releaseDate
+LIMIT 10
+4. Afficher les films avec leur durée et genre, triés par durée :
+sparql
+Copier
+Modifier
+PREFIX :      <http://localhost:3333/>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?title ?duration ?genre
+WHERE {
+  ?movie rdf:type rdfs:Movie ;
+         rdfs:title ?title ;
+         rdfs:duration ?duration ;
+         rdfs:genre ?genre .
+}
+ORDER BY DESC(?duration)
+LIMIT 10
+5. Obtenir les films avec leur date de sortie en streaming et en salles :
+sparql
+Copier
+Modifier
+PREFIX :      <http://localhost:3333/>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?title ?releaseStreaming ?releaseTheater
+WHERE {
+  ?movie rdf:type rdfs:Movie ;
+         rdfs:title ?title ;
+         rdfs:datePublished ?release .
+  ?release :releasedStreamingDate ?releaseStreaming ;
+           :releasedTheaterDate ?releaseTheater .
+}
+ORDER BY ?releaseStreaming
+LIMIT 10
+6. Lister les films et leur score sur le TomatoMeter :
+sparql
+Copier
+Modifier
+PREFIX :      <http://localhost:3333/>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?title ?tomatoMeter
+WHERE {
+  ?movie rdf:type rdfs:Movie ;
+         rdfs:title ?title ;
+         rdfs:aggregateRating ?rating .
+  ?rating :tomatoMeter ?tomatoMeter .
+}
+ORDER BY DESC(?tomatoMeter)
+LIMIT 10
+7. Obtenir les films et leurs auteurs (réalisateurs) :
+sparql
+Copier
+Modifier
+PREFIX :      <http://localhost:3333/>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?title ?authorName
+WHERE {
+  ?movie rdf:type rdfs:Movie ;
+         rdfs:title ?title ;
+         rdfs:author ?author .
+  ?author foaf:name ?authorName .
+}
+ORDER BY ?authorName
+LIMIT 10

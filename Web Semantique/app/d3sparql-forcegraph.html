@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+  <head>
+    <!-- <link rel="stylesheet" type="text/css" href="css/style.css"/> -->
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="d3sparql.js"></script>
+    <script>
+    function exec() {
+      var endpoint = d3.select("#endpoint").property("value")
+      var sparql = d3.select("#sparql").property("value")
+      d3sparql.query(endpoint, sparql, render)
+    }
+    function exec_online() {
+      var endpoint_external = d3.select("#endpoint_external").property("value") // Set the DBpedia SPARQL endpoint
+      var sparql_external = d3.select("#sparql_external").property("value")
+      d3sparql.query(endpoint_external, sparql_external, render_external)
+    }
+    function exec_offline() {
+      d3.json("cache/dbpedia/cache_forcegraph.json", render)
+    }
+
+    function render(json) {
+      var config = {
+        "radius": function(d) { return 5; },
+        "charge": -500,
+        "distance": 50,
+        "width": 1000,
+        "height": 750,
+        "selector": "#result1"
+      }
+      d3sparql.forcegraph(json, config)
+    }
+    function render_external(json) {
+      var config = {
+        "radius": function(d) { return 5; },
+        "charge": -500,
+        "distance": 50,
+        "width": 1000,
+        "height": 750,
+        "selector": "#result2"
+      }
+      d3sparql.forcegraph(json, config)
+    }
+    
+    function toggle() {
+      d3sparql.toggle()
+    }
+    </script>
+  </head>
+  <body>
+    <div id="query" style="margin: 20px; align-items: center;">
+      <h1>d3forcegraph</h1>
+      <form class="form-inline">
+        <label>SPARQL endpoint:</label>
+        <div class="input-append" style="display: flex;">
+          <input id="endpoint" class="span5" value="http://localhost:3030/websemantique/query" type="text" style="flex: 1; width: 100%; height: 50%;">
+          <button class="btn" type="button" onclick="exec()">Local Query</button>
+          <button class="btn" type="button" onclick="exec_offline()">Use Cache</button>
+          <button class="btn" type="button" onclick="toggle()"><i id="button" class="icon-chevron-up"></i></button>
+        </div>
+      </form>
+      <textarea id="sparql" class="span9" rows=15 style="width: 100%; height: 300px;">
+        # Cette requête SPARQL a pour objectif de trouver des paires de films réalisés par le même réalisateur, 
+        # où le premier film est sorti après le deuxième.
+        prefix :      <http://localhost:3333/> 
+        prefix foaf:  <http://xmlns.com/foaf/0.1/> 
+        prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+        prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> 
+        prefix vcard: <http://www.w3.org/2006/vcard/ns#> 
+        prefix xsd:   <http://www.w3.org/2001/XMLSchema#> 
+
+        SELECT ?releaseDate1 ?releaseDate2 ?title1 ?title2 
+        WHERE {
+          {
+            SELECT DISTINCT ?director ?releaseDate1 ?releaseDate2 ?title1 ?title2 
+            WHERE {
+              ?director rdf:type rdfs:Person .
+              ?movie1 rdf:type rdfs:Movie ;
+                      rdfs:title ?title1;
+                      rdfs:director ?director ;
+                      rdfs:datePublished/:releasedTheaterDate ?releaseDate1 .
+              ?movie2 rdf:type rdfs:Movie ;
+                      rdfs:title ?title2;
+                      rdfs:director ?director ;
+                      rdfs:datePublished/:releasedTheaterDate ?releaseDate2 .
+              FILTER (?movie1 != ?movie2)
+              FILTER (?releaseDate1 > ?releaseDate2)
+            }
+            LIMIT 20
+          }
+        }
+      </textarea>
+      <div id="result1"></div>
+      
+  </body>
+</html>

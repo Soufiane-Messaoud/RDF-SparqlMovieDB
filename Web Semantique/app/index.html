@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<title>d3sparql.js</title>
+<!-- <script src="lib/jquery/jquery.min.js"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+function loadframe(html) {
+  $("#iframe").attr("src", html)
+    .load(function() {
+     $(this).css("height", $(this).contents().height() + 100 + "px")
+    })
+  $(window).scrollTop(0)
+}
+</script>
+<div class="container">
+  <table border="1" style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>Catégorie</th>
+        <th>Option</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="3">Chart</td>
+        <td>d3barchart</td>
+        <td><a href="javascript:loadframe('d3sparql-barchart.html')"><i class="icon-th-large"></i> d3barchart</a></td>
+      </tr>
+      <tr>
+        <td>d3piechart</td>
+        <td><a href="javascript:loadframe('d3sparql-piechart.html')"><i class="icon-th-large"></i> d3piechart</a></td>
+      </tr>
+      <!-- <tr>
+        <td>d3scatterplot</td>
+        <td><a href="javascript:loadframe('d3sparql-scatterplot.html')"><i class="icon-th-large"></i> d3scatterplot</a></td>
+      </tr> -->
+      
+      <tr>
+        <td rowspan="2">Graph</td>
+        <td>d3forcegraph</td>
+        <td><a href="javascript:loadframe('d3sparql-forcegraph.html')"><i class="icon-th-large"></i> d3forcegraph</a></td>
+      </tr>
+      <!-- <tr>
+        <td>d3sankey</td>
+        <td><a href="javascript:loadframe('d3sparql-sankey.html')"><i class="icon-th-large"></i> d3sankey</a></td>
+      </tr> -->
+    </tbody>
+  </table>
+</div>
+
+
+
+<div class="container" style="padding: 50px">
+<iframe id="iframe" src="d3sparql.html" width="100%" height="30000" scrolling="auto" frameborder="0" seamless></iframe>
+</div>
